@@ -3,8 +3,8 @@
 require_once "config.php";
  
 // Define variables and initialize with empty values
-$name = $address = $salary = "";
-$name_err = $address_err = $salary_err = "";
+$name = $age = $contactnumber = $emailaddress =  $gender = "";
+$name_err = $age_err = $contactnumber_err = $emailaddress_err = $gender_err = "";
  
 // Processing form data when form is submitted
 if(isset($_POST["id"]) && !empty($_POST["id"])){
@@ -20,38 +20,53 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     } else{
         $name = $input_name;
     }
-    
-    // Validate address address
-    $input_address = trim($_POST["address"]);
-    if(empty($input_address)){
-        $address_err = "Please enter an address.";     
+    // Validate age
+    $input_age = trim($_POST["age"]);
+    if(empty($input_age)){
+        $age_err = "Please enter your age.";     
     } else{
-        $address = $input_address;
+        $age = $input_age;
+    }
+	// Validate  contact number
+    $input_contactnumber = trim($_POST["contactnumber"]);
+    if(empty($input_contactnumber)){
+        $contactnumber_err = "Please enter your contactnumber.";     
+    } else{
+        $contactnumber = $input_contactnumber;
+    }
+    // Validate address email address
+    $input_emailaddress = trim($_POST["emailaddress"]);
+    if(empty($input_emailaddress)){
+        $emailaddress_err = "Please enter your email address.";     
+    } else{
+        $emailaddress = $input_emailaddress;
     }
     
-    // Validate salary
-    $input_salary = trim($_POST["salary"]);
-    if(empty($input_salary)){
-        $salary_err = "Please enter the salary amount.";     
-    } elseif(!ctype_digit($input_salary)){
-        $salary_err = "Please enter a positive integer value.";
+    // Validate gender
+    $input_gender = trim($_POST["gender"]);
+    if(empty($input_gender)){
+        $gender_err = "Please enter your gender.";
+    } elseif(!filter_var($input_gender, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z\s]+$/")))){
+        $gender_err = "Please enter a valid gender.";
     } else{
-        $salary = $input_salary;
+        $gender = $input_gender;
     }
     
     // Check input errors before inserting in database
-    if(empty($name_err) && empty($address_err) && empty($salary_err)){
+    if(empty($name_err) && empty($age_err) && empty($contactnumber_err) && empty($emailaddress_err) && empty($gender_err)){
         // Prepare an update statement
-        $sql = "UPDATE employees SET name=?, address=?, salary=? WHERE id=?";
+        $sql = "UPDATE employees SET name=?, age=?, contactnumber=?, emailaddress=?, gender=? WHERE id=?";
          
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sssi", $param_name, $param_address, $param_salary, $param_id);
+            mysqli_stmt_bind_param($stmt, "sisssi", $param_name, $param_age, $param_contactnumber, $param_emailaddress, $param_gender, $param_id);
             
             // Set parameters
             $param_name = $name;
-            $param_address = $address;
-            $param_salary = $salary;
+			$param_age = $age;
+			$param_contactnumber = $contactnumber;
+            $param_emailaddress = $emailaddress;
+            $param_gender = $gender;
             $param_id = $id;
             
             // Attempt to execute the prepared statement
@@ -96,8 +111,10 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                     
                     // Retrieve individual field value
                     $name = $row["name"];
-                    $address = $row["address"];
-                    $salary = $row["salary"];
+					$age = $row["age"];
+					$contactnumber = $row["contactnumber"];
+                    $emailaddress = $row["emailaddress"];
+                    $gender = $row["gender"];
                 } else{
                     // URL doesn't contain valid id. Redirect to error page
                     header("location: error.php");
@@ -148,16 +165,29 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                             <input type="text" name="name" class="form-control <?php echo (!empty($name_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $name; ?>">
                             <span class="invalid-feedback"><?php echo $name_err;?></span>
                         </div>
-                        <div class="form-group">
-                            <label>Address</label>
-                            <textarea name="address" class="form-control <?php echo (!empty($address_err)) ? 'is-invalid' : ''; ?>"><?php echo $address; ?></textarea>
-                            <span class="invalid-feedback"><?php echo $address_err;?></span>
+						<div class="form-group">
+                            <label>Age</label>
+                            <input type="number" name="age" class="form-control <?php echo (!empty($age_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $age; ?>">
+                            <span class="invalid-feedback"><?php echo $age_err;?></span>
+                        </div>
+						<div class="form-group">
+                            <label>Contact #</label>
+                            <input type="text" name="contactnumber" class="form-control <?php echo (!empty($contactnumber_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $contactnumber; ?>">
+                            <span class="invalid-feedback"><?php echo $contactnumber_err;?></span>
                         </div>
                         <div class="form-group">
-                            <label>Salary</label>
-                            <input type="text" name="salary" class="form-control <?php echo (!empty($salary_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $salary; ?>">
-                            <span class="invalid-feedback"><?php echo $salary_err;?></span>
+                            <label>Email Address</label>
+							<input type="email" name="emailaddress" class="form-control <?php echo (!empty($emailaddress_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $emailaddress; ?>">
+                            <span class="invalid-feedback"><?php echo $emailaddress_err;?></span>
                         </div>
+						<div class="form-group">
+							<label for="exampleFormControlSelect1">Gender</label>
+							<select class="form-control <?php echo (!empty($gender_err)) ? 'is-invalid' : ''; ?>" name="gender">
+							  <option value="Male" <?php if($gender=="Male"){echo "selected";}?>>Male</option>
+							  <option value="Female" <?php if($gender=="Female"){echo "selected";}?>>Female</option>
+							</select>
+							<span class="invalid-feedback"><?php echo $gender_err;?></span>
+						  </div>
                         <input type="hidden" name="id" value="<?php echo $id; ?>"/>
                         <input type="submit" class="btn btn-primary" value="Submit">
                         <a href="index.php" class="btn btn-secondary ml-2">Cancel</a>
