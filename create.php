@@ -114,7 +114,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         </div>
                         <div class="form-group">
                             <label>Age</label>
-                            <textarea name="age" class="form-control <?php echo (!empty($age_err)) ? 'is-invalid' : ''; ?>"><?php echo $age; ?></textarea>
+                            <input type="number" name="age" class="form-control <?php echo (!empty($age_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $age; ?>">
                             <span class="invalid-feedback"><?php echo $age_err;?></span>
                         </div>
                         <div class="form-group">
@@ -124,14 +124,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="text" name="emailaddress" class="form-control <?php echo (!empty($emailaddress_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $emailaddress; ?>">
+                            <input type="email" name="emailaddress" class="form-control <?php echo (!empty($emailaddress_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $emailaddress; ?>">
                             <span class="invalid-feedback"><?php echo $emailaddress_err;?></span>
                         </div>
-                        <div class="form-group">
-                            <label>Gender</label>
-                            <input type="text" name="gender" class="form-control <?php echo (!empty($gender_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $gender; ?>">
-                            <span class="invalid-feedback"><?php echo $gender_err;?></span>
-                        </div>
+						<div class="form-group">
+							<label for="exampleFormControlSelect1">Gender</label>
+							<select class="form-control <?php echo (!empty($gender_err)) ? 'is-invalid' : ''; ?>" name="gender">
+							  <option value="Male" <?php if($gender=="Male"){echo "selected";}?>>Male</option>
+							  <option value="Female" <?php if($gender=="Female"){echo "selected";}?>>Female</option>
+							</select>
+							<span class="invalid-feedback"><?php echo $gender_err;?></span>
+						  </div>
                         <input type="submit" class="btn btn-primary" value="Submit">
                         <a href="index.php" class="btn btn-secondary ml-2">Cancel</a>
                     </form>
