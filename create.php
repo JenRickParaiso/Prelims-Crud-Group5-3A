@@ -29,8 +29,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate contact number
     $input_contactnumber = trim($_POST["contactnumber"]);
     if(empty($input_contactnumber)){
-        $age_err = "Please enter your contact number.";     
-    } elseif(!ctype_digit($input_age)){
+        $contactnumber_err = "Please enter your contact number.";     
+    } elseif(!ctype_digit($input_contactnumber)){
         $contactnumber_err = "Please enter a positive integer value.";
     } else{
         $contactnumber = $input_contactnumber;
